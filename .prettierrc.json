@@ -1,0 +1,5 @@
+{
+  "singleQuote": true,// 单引号
+  "semi": false,// 去掉行尾分号
+  "trailingComma": "none"// trailingComma 对象属性和数组元素的最后自动添加逗号，none不要逗号了
+}
