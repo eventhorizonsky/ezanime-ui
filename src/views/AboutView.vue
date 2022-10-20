@@ -1,6 +1,5 @@
 <template>
   <v-container>
-
   <v-row>
   <v-col cols="12" md="3" v-if="bungumi!=null">
      <v-card
@@ -8,9 +7,7 @@
   >
     <v-img
       :src="bungumi.imageUrl"
-
     ></v-img>
-
     <v-card-title>
       {{bungumi.animeTitle}}
     </v-card-title>
@@ -59,11 +56,24 @@
     max-width="auto"
   >
   <v-container fluid>
+  <v-tabs
+          v-model="tab"
+          align-with-title
+          color="accent"
+        >
+          <v-tabs-slider color="yellow"></v-tabs-slider>
+     <v-tab
+            v-for="website in websites"
+            :key="website"
+          >
+            {{ website}}
+          </v-tab>
+          </v-tabs>
       <v-row dense>
+        <v-container fluid>
         <template>
           
         <v-col
-          
           :cols="6"
           :md="3"
         >
@@ -96,6 +106,7 @@
           
         </v-col>
       </template>
+      </v-container>
       </v-row>
     </v-container>
   </v-card>
@@ -113,7 +124,8 @@ export default {
    omolist:null,
    loaded:{
     omo:false
-   }
+   },
+   websites:["omofun","age动漫","555影视"]
   }),beforeCreate () {
     this.$axios
       .get('https://api.dandanplay.net/api/v2/bangumi/'+this.$route.query.id)
