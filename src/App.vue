@@ -32,6 +32,7 @@
             flat
             hide-details
             solo-inverted
+            v-model="searchname" @keyup.enter="gosearch()"
             ></v-text-field>
           </v-responsive>
         </v-card>
@@ -55,7 +56,7 @@
     <!-- 搜索框 -->
         <v-card>
           <v-responsive max-width="260">
-            <v-text-field dense flat hide-details solo-inverted></v-text-field>
+            <v-text-field  v-model="searchname" @keyup.enter="register('about?name='+searchname)" dense flat hide-details solo-inverted></v-text-field>
           </v-responsive>
         </v-card>
         <v-spacer></v-spacer>
@@ -113,7 +114,7 @@
 <script>
   export default {
     data: () => ({
-  
+      searchname:"",
       drawer: false,//侧边栏开关
 
       links: [
@@ -127,6 +128,9 @@
 
         this.$router.push(href)
 
+      },
+      gosearch(){
+window.location.href='about?name='+this.searchname
       },
       changedark(){//切换白天夜间模式
         this.$vuetify.theme.dark=!this.$vuetify.theme.dark

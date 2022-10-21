@@ -50,7 +50,7 @@
 
   </v-card>
   </v-col>
-  <v-col  cols="12" md="9">
+  <v-col  cols="12" :md=md>
       <v-card
     class="mx-auto"
     max-width="auto"
@@ -71,7 +71,7 @@
           </v-tab>
           </v-tabs>
           </v-col>
-          <v-col cols="12" md="4">
+          <v-col v-if="bungumi!=null"  cols="12" md="4">
                <v-card>
         
             <v-text-field dense flat hide-details solo-inverted v-model="searchname" @keyup.enter="loadlist(searchname)"></v-text-field>
@@ -85,7 +85,9 @@
         v-for="website,index in websites"
         :key="index"
       >
-               <v-container fluid :min-height="40"><v-overlay :value="overlay"  :absolute="true">    <v-progress-circular
+               <v-container fluid >
+                
+                <v-overlay :value="overlay"  :absolute="true">    <v-progress-circular
       indeterminate
       color="amber"
     ></v-progress-circular></v-overlay>
@@ -184,6 +186,7 @@
         </v-col>
         </v-row>
       </template>
+      <div style="height:100px"></div>
       </v-container>
       </v-tab-item>
     </v-tabs-items>
@@ -203,7 +206,8 @@
 export default {
   
   data: () => ({
-   
+
+   md:"8",
     overlay:false,
     searchname:"",
     tab:null,
@@ -214,13 +218,19 @@ export default {
     omo:false
    },
    websites:[{name:"omofun",list:[]},{name:"age动漫",list:[]},{name:"555影视",list:[]}]
-  }),created () {
+  }),
+
+  created () {
+    if(this.$route.query.id==null){
+
+      this.md="12"
+    }else{
     this.$axios
       .get('https://api.dandanplay.net/api/v2/bangumi/'+this.$route.query.id)
       .then(response => (this.bungumi = response.data.bangumi))
       .catch(function (error) { // 请求失败处理
         console.log(error);
-      });
+      });}
       this.searchname=this.$route.query.name
       this.$axios
       .get('/websites.json')
@@ -230,7 +240,13 @@ export default {
         console.log(error);
       });
      
-  }, methods:{
+  }, watch:{
+	'$route.query.name': {
+		handler(newVal,oldVal){
+		loadlist(newVal)
+	},
+	deep: true
+}},methods:{
     gourl(id,website){
       var url=this.websitesrule[website].homeUrl+this.websitesrule[website].dtUrlIdR
       url=url.replace("(\\S+)",id)
