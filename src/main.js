@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import axios from 'axios'
 
+
 import App from './App.vue'
 import router from './router'
 import vuetify from './plugins/vuetify'
@@ -15,7 +16,6 @@ new Vue({
   icons: {
     iconfont: 'mdi', // default - only for display purposes
   },
-
   router,
   axios,
   vuetify,

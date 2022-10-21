@@ -65,9 +65,9 @@
         <v-btn icon><v-icon>mdi-bell-ring</v-icon></v-btn>
     </v-app-bar>
  <!-- 侧边栏 -->
-<v-navigation-drawer v-model="drawer" absolute temporary>
+<v-navigation-drawer v-model="drawer" temporary fixed>
   <v-list nav dense>
-    <v-list-item-group v-model="group" active-class="primary--text text--accent-4">
+    <v-list-item-group  active-class="primary--text text--accent-4">
       <v-list-item v-for="link in links"
           :key="link.name"
           text
@@ -76,30 +76,46 @@
       </v-list-item>
     </v-list-item-group>
   </v-list>
-  <div class="pa-2">
-    <v-btn block>
-      设置
-    </v-btn>
-  </div>
-  <div class="pa-2">
-    <v-btn block>
-      登录
-    </v-btn>
-  </div>
+
+  
 </v-navigation-drawer>
-    <v-main class="secondary">
+
+    <v-main class="secondary pb-14">
     <!-- 主页面 -->
     <router-view></router-view>
          
     </v-main>
+    
+  <v-bottom-navigation v-if="$vuetify.breakpoint.smAndDown" color="accent" fixed  grow>
+    <v-btn  icon @click="register('/')">
+      <span>首页</span>
+
+      <v-icon>mdi-home</v-icon>
+    </v-btn>
+
+    <v-btn icon >
+      <span>设置</span>
+
+      <v-icon>mdi-tune</v-icon>
+    </v-btn>
+
+    <v-btn icon>
+      <span>登录</span>
+
+      <v-icon>mdi-account</v-icon>
+    </v-btn>
+  </v-bottom-navigation>
   </v-app>
+
+
 </template>
 
 <script>
   export default {
     data: () => ({
+  
       drawer: false,//侧边栏开关
-      group:null,//list group 话说这个是啥，忘了
+
       links: [
         { name:'首页',href:"/"},
         { name: '推荐', href: "/recommend" },
