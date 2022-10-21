@@ -1,6 +1,7 @@
 <!-- 首页 -->
 <template>
     <v-container>
+      
         <v-row>
           <v-col cols="12" md="2">
             <v-sheet rounded="lg">
@@ -20,18 +21,8 @@
                   </v-list-item-content>
                 </v-list-item>
                 </v-list-item-group>
-                <v-divider class="my-2"></v-divider>
+            
 
-                <v-list-item
-                  link
-                  color="grey lighten-4"
-                >
-                  <v-list-item-content @click="refresh">
-                    <v-list-item-title>
-                      <v-icon>mdi-refresh</v-icon>刷新
-                    </v-list-item-title>
-                  </v-list-item-content>
-                </v-list-item>
               </v-list>
             </v-sheet>
           </v-col>
@@ -95,6 +86,7 @@
 </v-sheet>
           </v-col>
         </v-row>
+
       </v-container>
 </template>
 <script>
@@ -114,9 +106,7 @@
       });
 
   }, methods: {
-    refresh() {
-      window.location.reload();
-    },register(href) {
+    register(href) {
 
       this.$router.push(href)
 

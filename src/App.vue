@@ -84,7 +84,16 @@
     <v-main class="secondary pb-14">
     <!-- 主页面 -->
     <router-view></router-view>
-         
+                     <v-btn
+                     @click="refresh()"
+  color="accent"
+  dark
+                
+                bottom
+                fixed
+                right
+                fab
+><v-icon>mdi-refresh </v-icon></v-btn>
     </v-main>
     
   <v-bottom-navigation v-if="$vuetify.breakpoint.smAndDown" color="accent" fixed  grow>
@@ -128,7 +137,9 @@
 
         this.$router.push(href)
 
-      },
+      },refresh() {
+      window.location.reload();
+    },
       gosearch(){
 window.location.href='about?name='+this.searchname
       },

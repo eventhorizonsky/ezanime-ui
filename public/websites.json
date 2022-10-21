@@ -7,7 +7,7 @@
     "scVodId": "id",
     "scVodIdR": "",
     "scVodImg": "pic",
-    "dtUrlIdR": "/vod/play/id/(\\S+).html",
+    "dtUrlIdR": "/vod/detail/id/(\\S+).html",
     "dtUrlNode": "//div[@class='module-play-list']/div",
     "dtUrlSubNode": "/a"
 },{
