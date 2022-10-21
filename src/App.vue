@@ -88,9 +88,10 @@
                      @click="refresh()"
   color="accent"
   dark
-                
+               
                 bottom
                 fixed
+                class="mb-14"
                 right
                 fab
 ><v-icon>mdi-refresh </v-icon></v-btn>
