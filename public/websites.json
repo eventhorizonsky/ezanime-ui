@@ -1,15 +1,28 @@
 {"websites":[
     {"name":"omofun",
-    "homeUrl": "https://omofun.tv",
+    "homeUrl": "https://www.omofun.top",
     "searchUrl": "/index.php/ajax/suggest?mid=1&wd={wd}&limit=10",
     "scVodNode": "json:list",
     "scVodName": "name",
     "scVodId": "id",
     "scVodIdR": "",
     "scVodImg": "pic",
-    "dtUrlIdR": "/vod/detail/id/(\\S+).html",
-    "dtUrlNode": "//div[@class='module-play-list']/div",
-    "dtUrlSubNode": "/a"
+    "dtUrlIdR": "/index.php/vod/detail/id/(\\S+).html",
+    "dtUrlNode": "//div[@id='panel1']",
+    "dtUrlSubNode": "/div[@class='module-play-list']/div/a",
+    "playurl":"/vod/play/id/(\\S+)/sid/(\\S2+)/nid/(\\S3+).html"
+},{"name":"acgnya",
+    "homeUrl": "https://www.acgnya.com",
+    "searchUrl": "/index.php/ajax/suggest?mid=1&wd={wd}&limit=10",
+    "scVodNode": "json:list",
+    "scVodName": "name",
+    "scVodId": "id",
+    "scVodIdR": "",
+    "scVodImg": "pic",
+    "dtUrlIdR": "/voddetail/(\\S+)/",
+    "dtUrlNode": "//div[@id='panel1']",
+    "dtUrlSubNode": "/div[@class='module-play-list']/div/a",
+    "playurl":"/vodplay/(\\S+)-(\\S2+)-(\\S3+)"
 },{
     "name":"agemys",
     "homeUrl": "https://www.agemys.net", 
@@ -22,7 +35,8 @@
     "dtUrlNode": "//div[@id='playlist-div']/div[@class='main0']/div",
     "dtUrlSubNode": "/ul/li/a",
     "dtUrlId": "@href",
-    "dtUrlIdR": "/detail/(\\S+)"
+    "dtUrlIdR": "/detail/(\\S+)",
+    "playurl":"/play/(\\S+)?playid=(\\S2+)_(\\S3+)"
 },{
     "name":"dm84",
     "homeUrl": "https://dm84.tv",
@@ -36,7 +50,9 @@
   "dtUrlSubNode": "/li/a",
   "dtUrlId": "@href",
   "dtUrlIdR": "/v/(\\S+).html",
-  "dtUrlName": "/text()"
+  "dtUrlName": "/text()",
+  "playurl":"/p/(\\S+)-(\\S2+)-(\\S3+).html"
+
 }
 ]
 
