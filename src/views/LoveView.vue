@@ -108,6 +108,9 @@ export default {
         response => {
           this.websitesrule = response.data.websites
           for(var i=0;i<response.data.websites.length;i++){
+            var init={bungumi:[]}
+      if(localStorage.getItem(this.websitesrule[i].name)==null||localStorage.getItem(this.websitesrule[i].name)=="{}"){localStorage.setItem(this.websitesrule[i].name, JSON.stringify(init))}
+      
             var localdata=JSON.parse(localStorage.getItem(response.data.websites[i].name))
             if(localdata!=null&&localdata!="{}"){var bungumi= localdata.bungumi
            var obj={name:response.data.websites[i].name,list:bungumi}
