@@ -70,7 +70,7 @@
     <!-- 搜索结果 -->
     <v-tabs-items v-model="tab">
       <v-tab-item
-        v-for="website,index in websites"
+        v-for="website,webindex in websites"
         :key="website.name"
       >
       <v-container fluid >
@@ -83,12 +83,12 @@
       </v-overlay>
       <template>
         <v-row>
-          <v-col  v-for="li in website.list"
+          <v-col  v-for="li,animeindex in website.list"
             :key="li.id"
             :cols="6"
             :md="3">
           <v-card>
-            <v-card @click="gourl(li.id,index)">
+            <v-card @click="gourl(li.id,webindex)">
               <v-img
                 gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
                 :src="li.pic"
@@ -111,19 +111,25 @@
                     >
                   <template  v-for="thesub,index in li.sub">     
                       <v-list-item
-                        v-if="thesub!=''"
+                        v-if="thesub.txt!=''"
                         :key="index" 
                         class="pa-0">
                         <v-list-item-content  >
-                          <span>更新至{{thesub}}</span>
+                           <v-btn
+                                color="accent"
+                                text
+                                @click="goplaynew(webindex,thesub.playurl)"
+                              >
+                               {{thesub.txt}}
+                              </v-btn>
                         </v-list-item-content>
-                        <v-list-item-action v-if="!thesub.love">
-                          <v-btn icon>
+                        <v-list-item-action v-if="!thesub.loved">
+                          <v-btn icon @click="love(webindex,li,index,thesub,animeindex)">
                             <v-icon>mdi-heart-outline</v-icon>
                           </v-btn>
                         </v-list-item-action>
-                        <v-list-item-action v-if="thesub.love">
-                          <v-btn icon>
+                        <v-list-item-action v-if="thesub.loved">
+                          <v-btn icon @click="unlove(webindex,li,index,thesub,animeindex)">
                             <v-icon>mdi-heart</v-icon>
                           </v-btn>
                         </v-list-item-action>
@@ -158,7 +164,23 @@
 
 </v-col>
   </v-row>
+    <v-snackbar
+      v-model="snackbar"
+      :timeout="timeout"
+    >
+      {{ snaptext }}
 
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="blue"
+          text
+          v-bind="attrs"
+          @click="snackbar = false"
+        >
+          关闭
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -166,6 +188,9 @@
 export default {
   
   data: () => ({
+    snackbar:false,
+    timeout:2000,
+    snaptext:"",
     md:"8",//搜索栏所占宽度，当无id查询时设置为全屏
     searchname:"",//搜索内容，用于搜索结果内的搜索框展示
     tab:null,//搜索结果标签，由json文件生成
@@ -214,11 +239,64 @@ export default {
 }},
   //方法
   methods:{
+    goplaynew(webindex,playurl){
+      var url=this.websitesrule[webindex].homeUrl+playurl
+      window.open(url)
+    },
     //点击搜索结果跳转到对应的详情地址
     gourl(id,website){
       var url=this.websitesrule[website].homeUrl+this.websitesrule[website].dtUrlIdR
       url=url.replace("(\\S+)",id)
       window.open(url)
+    },
+    //从数组中删除指定编号的番剧
+    delereformlocal(_obj,_arr){
+    var length=_arr.length
+    for (var i = 0; i <length; i++) {
+        if (_arr[i].bh ==_obj) {
+            if (i == 0) {
+                _arr.shift(); //删除并返回数组的第一个元素
+                return _arr;
+            }
+            else if (i == length - 1) {
+                _arr.pop();  //删除并返回数组的最后一个元素
+                return _arr;
+            }
+            else {
+                _arr.splice(i, 1); //删除下标为i的元素
+                return _arr;
+            }
+        }}
+  },
+    //取消追番
+    unlove(webindex,li,index,thesub,animeindex){
+    
+      var bh='"bh":'+'"'+li.id+"-"+(index+1)+'"'
+      var bungumi=li.id+"-"+(index+1)
+      var localbungumi= JSON.parse(localStorage.getItem(this.websitesrule[webindex].name))
+      if(JSON.stringify(localbungumi).indexOf(bh)!=-1){
+      localbungumi.bungumi=this.delereformlocal(bungumi,localbungumi.bungumi)
+      localStorage.setItem(this.websitesrule[webindex].name, JSON.stringify(localbungumi))
+      this.snaptext="取消追番成功"
+      }else{this.snaptext="bungumi内不包含此番剧"}
+      this.websites[webindex].list[animeindex].sub[index].loved=false
+      this.snackbar=true
+    },
+    //添加喜欢的番剧
+    love(webindex,li,index,thesub,animeindex){
+      var dturl="/"+this.websitesrule[webindex].name+this.websitesrule[webindex].dtUrlIdR
+      dturl=dturl.replace("(\\S+)",li.id)
+      var playurl=this.websitesrule[webindex].homeUrl+this.websitesrule[webindex].playurl
+      playurl=playurl.replace("(\\S+)",li.id).replace("(\\S2+)",index+1).replace("(\\S3+)",thesub.lastsub)
+      var bungumi={id:li.id,pic:li.pic,dturl:dturl,bh:li.id+"-"+(index+1),subnode:index+1,name:li.name,lastsub:thesub.lastsub,subtxt:thesub.txt,read:true,playurl:thesub.playurl}
+      var init={bungumi:[]}
+      if(localStorage.getItem(this.websitesrule[webindex].name)==null||localStorage.getItem(this.websitesrule[webindex].name)=="{}"){localStorage.setItem(this.websitesrule[webindex].name, JSON.stringify(init))}
+      var localbungumi= JSON.parse(localStorage.getItem(this.websitesrule[webindex].name))
+      localbungumi.bungumi.push(bungumi)
+      localStorage.setItem(this.websitesrule[webindex].name, JSON.stringify(localbungumi))
+      this.websites[webindex].list[animeindex].sub[index].loved=true  
+      this.snaptext="追番成功"
+      this.snackbar=true
     },
     //通过关键字搜索番剧
     loadlist(name){
@@ -316,8 +394,23 @@ export default {
             //遍历每个播放列表
             for(let i=1;i<=dtUrlNodelist.length;i++){
               //获取对应播放列表的最新剧集，并推送给搜索结果的数据
-                var last= $(this.eval(dtUrlNode+"["+i+"]"+dtUrlSubNode,htmlDom).slice(-1)).text()
-                this.websites[index].list[j].sub.push(last)
+              var subnode=$(this.eval(dtUrlNode+"["+i+"]"+dtUrlSubNode,htmlDom))
+              //初始化追番标记
+              var love=false;
+              //检测本地数据中是否有此番的追番数据
+              if(localStorage.getItem(this.websitesrule[index].name)!=null){
+                var localdata=localStorage.getItem(this.websitesrule[index].name)
+                var bh='"bh":'+'"'+this.websites[index].list[j].id+"-"+i+'"'
+                if(localdata.indexOf(bh)!=-1){love=true
+                }
+              }
+              //获取最新播放页
+              var playurl=""
+              var last=subnode.slice(-1).text()
+              if(last!=""){playurl=$(this.eval(dtUrlNode+"["+i+"]"+dtUrlSubNode+this.websitesrule[index].playurl,htmlDom)).slice(-1)[0].value}
+              console.log(playurl)
+              var sublast={lastsub:subnode.length,txt:last,loved:love,playurl:playurl}
+              this.websites[index].list[j].sub.push(sublast)
             }
             //设置该站源对应搜索结果为已加载
             this.websites[index].list[j].loaded=true
